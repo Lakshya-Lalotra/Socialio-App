@@ -52,6 +52,19 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false ,
     },
+    desc:{
+        type:String,
+        max:50,
+    },
+    bio:{
+        type: String,
+        max : 200,
+    },
+    friendship:
+    {
+        type:Number,
+        enum:[1,2,3],
+    }
 
 },
 { timestamps: true}
