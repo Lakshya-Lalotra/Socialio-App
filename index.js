@@ -6,8 +6,9 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 // const postman = require("postman");
-const userRoute = require("./roots/users"); // Imported user.js
-const authRoute = require("./roots/auths"); // Imported auth.js
+const userRoute = require("./routes/users"); // Imported user.js
+const authRoute = require("./routes/auth"); // Imported auth.js
+// const postRoute = require("./roots/posts"); // Imported posts.js
 
 dotenv.config();  // dotenv enabled
 
@@ -23,7 +24,8 @@ app.use(helmet());
 app.use(morgan("common"));
 
 app.use("/api/users" ,userRoute); // user route call
-app.use("/api/auths" ,authRoute); // auth route call
+app.use("/api/auth", authRoute); // auth route call
+// app.use("/api/posts", postRoute); // posts route call
 
 
 // app.get("/", (req,res)=>
