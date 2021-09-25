@@ -1,6 +1,13 @@
+// User route
+
 const User = require("../models/User");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+
+// router.get("/", (req,res)=>{
+//   res.send("It's User Route")
+// })
+
 
 //update user
 router.put("/:id", async (req, res) => {
@@ -29,6 +36,14 @@ router.put("/:id", async (req, res) => {
 //delete user
 router.delete("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
+    if (req.body.password) {
+      try {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+      } catch (err) {
+        return res.status(500).json(err);
+      }
+    }
     try {
       await User.findByIdAndDelete(req.params.id);
       res.status(200).json("Account has been deleted");
@@ -44,15 +59,12 @@ router.delete("/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    const { password, updatedAt,isAdmin,createdAt,profilePictureClose,__v, ...other } = user._doc;
+    const { password, updatedAt, _id, profilePictureClose,isAdmin, createdAt, __v,email, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
   }
 });
-
-//follow a user
-
 router.put("/:id/follow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
     try {
@@ -63,7 +75,7 @@ router.put("/:id/follow", async (req, res) => {
         await currentUser.updateOne({ $push: { followings: req.params.id } });
         res.status(200).json("user has been followed");
       } else {
-        res.status(403).json("you already follow this user");
+        res.status(403).json("you allready follow this user");
       }
     } catch (err) {
       res.status(500).json(err);
@@ -96,7 +108,9 @@ router.put("/:id/unfollow", async (req, res) => {
   });
 
 
-   // Add friendship
+
+
+ // Add friend
 
 //  router.put("/:id/friends", async (req, res) => {
 //   if (req.body.userId !== req.params.id) {
@@ -122,4 +136,10 @@ router.put("/:id/unfollow", async (req, res) => {
 
 // Remove friendship
 
+
+
+
+
 module.exports = router;
+
+
