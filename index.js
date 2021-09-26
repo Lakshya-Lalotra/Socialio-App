@@ -12,10 +12,16 @@ const postRoute = require("./routes/posts");
 
 dotenv.config();  // dotenv enabled
 
-mongoose.connect(process.env.MONGO_URL, 
-    {useNewUrlParser: true, useUnifiedTopology: true},()=>{
-    console.log("Connected To MongoDB")
-});
+dotenv.config();
+
+mongoose.connect(
+  process.env.MONGO_URL,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => {
+    console.log("Connected to MongoDB");
+  }
+);
+
 
 //  middleware
 
@@ -23,6 +29,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 
+// routes
 app.use("/api/users" ,userRoute); // user route call
 app.use("/api/auth", authRoute); // auth route call
 app.use("/api/posts", postRoute); // posts route call
@@ -40,3 +47,6 @@ app.listen(8800,()=>
 {
     console.log("Backend Server is Running!!")
  });
+
+//  const port = 3000;
+// app.listen(port, () => console.log(`Example app listening on ${port}!`));
